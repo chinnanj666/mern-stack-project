@@ -1,1 +1,3 @@
-# javaScript_project
+
+# mern-stack-project
+updated soon..... mern

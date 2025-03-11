@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Title</title>
+  <script type="text/javascript">
+      function myFunction() {
+      let textelement = document.createElement("input");
+      textelement.setAttribute("type", "text");
+      textelement.setAttribute("id", "username");
+      textelement.setAttribute("placeholder", "Username");
+
+      let password = document.createElement("input");
+      password.setAttribute("type", "password");
+      password.setAttribute("id", "password");
+      password.setAttribute("placeholder", "Password");
+
+        let textbuttons = document.createElement("input");
+        textbuttons.setAttribute("type", "button");
+        textbuttons.setAttribute("id", "clickMe");
+        textbuttons.setAttribute("value", "Click Me");
+
+        textbuttons.onclick = function() {
+          textelement.setAttribute("value", "JavaScript code");
+          textelement.style.backgroundColor = "Red";
+          textelement.setAttribute("style", "background-color: yellow")
+          textelement.setAttribute("onclick", myFunction);
+          }
+
+        document.body.appendChild(textelement);
+        document.body.appendChild(document.createElement("br"));
+        document.body.appendChild(document.createElement("br"));
+      document.body.appendChild(password);
+      document.body.appendChild(document.createElement("br"));
+      document.body.appendChild(document.createElement("br"));
+      document.body.appendChild(textbuttons);
+        document.body.appendChild(document.createElement("br"));
+    }
+  </script>
+
+</head>
+<body onload="myFunction()">
+
+</body>
+</html>

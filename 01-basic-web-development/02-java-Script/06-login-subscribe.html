@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Subscribe</title>
+  <style>
+    fieldset {
+      margin-bottom: 20px;
+    }
+    #login-form, #subscribe-form {
+      display: none;
+    }
+  </style>
+  <script>
+    let subscribedNames = [];
+
+    function subscribe() {
+      const name = document.getElementById('subscribe-name').value;
+      if (name !== "") {
+        if (!subscribedNames.includes(name)) {
+          subscribedNames.push(name);
+          document.getElementById('subscribe-message').textContent = `Successfully subscribed, Now, please log in.`;
+          document.getElementById('subscribe-name').value = '';
+        } else {
+          document.getElementById('subscribe-message').textContent = 'This name is already subscribed!';
+        }
+      }
+    }
+
+    function login() {
+      const loginName = document.getElementById('login-name').value;
+      if (subscribedNames.includes(loginName)) {
+        document.getElementById('login-message').textContent = 'Login successful!';
+        document.getElementById('login-message').style.color = 'green';
+      } else {
+        document.getElementById('login-message').textContent = 'Name not found! Please subscribe first.';
+        document.getElementById('login-message').style.color = 'red';
+      }
+    }
+
+    function toggleForm(form) {
+      if (form === 'login') {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('subscribe-form').style.display = 'none';
+      } else {
+        document.getElementById('subscribe-form').style.display = 'block';
+        document.getElementById('login-form').style.display = 'none';
+      }
+    }
+
+    function init() {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('subscribe-form').style.display = 'none';
+      // toggleForm("subscribe-form"); //for subscribe
+    } // by befault all is set to none
+  </script>
+</head>
+<body onload="init()">
+
+<button onclick="toggleForm('subscribe')">Subscribe</button>
+<button onclick="toggleForm('login')">Login</button>
+
+<fieldset id="subscribe-form">
+  <legend>Subscribe</legend>
+  <label for="subscribe-name">Name:</label>
+  <input type="text" id="subscribe-name" placeholder="Enter name">
+  <button onclick="subscribe()">Subscribe</button>
+  <p id="subscribe-message"></p>
+</fieldset>
+
+<fieldset id="login-form">
+  <legend>Login</legend>
+  <label for="login-name">Name:</label>
+  <input type="text" id="login-name" placeholder="Enter name">
+  <button onclick="login()">Login</button>
+  <p id="login-message"></p>
+</fieldset>
+
+</body>
+</html>
