@@ -3,3 +3,4 @@ function  add(){
 }
 a = add()
 console.log(a)
+console.log(a)
