@@ -71,7 +71,7 @@ function readDirectory(directoryName) {
 }
 
 function isFileExist(filename) {
-    fs.access(filename, fs.constants.F_OK, (err) => {
+    fs.access(filename,  (err) => {
         if (err) {
             console.log("File does not exist!");
         } else {
