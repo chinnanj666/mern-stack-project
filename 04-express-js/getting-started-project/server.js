@@ -1,83 +1,83 @@
+// Require dependencies
 const express = require('express');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
+
 const app = express();
-
-// Load the port from the .env file (default to 3000 if not set)
-const port = process.env.PORT || 3001;
-
 app.use(express.json());
 
-let todos = [
-    { id: 1, task: 'Learn Express', completed: false },
-    { id: 2, task: 'Build a Todo app', completed: false },
-    { id: 3, task: 'Write documentation', completed: false },
-    { id: 4, task: 'Prepare presentation', completed: true },
-    { id: 5, task: 'Clean the house', completed: false },
-    {id:6,task:"Buy Grocery for House",completed :true},
-];
+// In-memory storage
+const users = [];
+let todos = [];
+let idCounter = 1;
 
-// Root route for testing
+// Basic Routes
+// 1. Root route
 app.get('/', (req, res) => {
-    res.send('Welcome to the Todo API');
+    res.json({
+        message: `Welcome to Todo API running on port ${process.env.PORT}`
+    });
 });
 
-// GET: Retrieve all todos
+// 2. Users routes
+app.get('/users', (req, res) => {
+    // Get all users
+    res.json(users);
+});
+
+app.post('/users', (req, res) => {
+    // Create new user
+    const { username } = req.body;
+    if (!username) {
+        return res.status(400).json({ error: 'Username is required' });
+    }
+    const user = {
+        id: idCounter++,
+        username
+    };
+    users.push(user);
+    res.status(201).json(user);
+});
+
+// 3. Todos routes
 app.get('/todos', (req, res) => {
+    // Get all todos
     res.json(todos);
 });
 
-// GET: Retrieve a single todo by id
-app.get('/todos/:id', (req, res) => {
-    const todo = todos.find(t => t.id === parseInt(req.params.id));
-    if (!todo) return res.status(404).send('Todo not found');
-    res.json(todo);
-});
-
-// POST: Create a new todo
 app.post('/todos', (req, res) => {
-    const { task, completed } = req.body;
-    const newTodo = {
-        id: todos.length + 1,
-        task,
-        completed: completed || false
-    };
-    todos.push(newTodo);
-    res.status(201).json(newTodo);
-});
-
-// PUT:exsiting one
-app.put('/todos/:id', (req, res) => {
-    const todo = todos.find(t => t.id === parseInt(req.params.id));
-    if (!todo) return res.status(404).send('Todo not found');
-
-    const { task, completed } = req.body;
-    todo.task = task || todo.task;
-    todo.completed = completed !== undefined ? completed : todo.completed;
-
-    res.json(todo);
-});
-
-// PATCH:
-app.patch('/todos/:id', (req, res) => {
-    const todo = todos.find(t => t.id === parseInt(req.params.id));
-    if (!todo) return res.status(404).send('Todo not found');
-
-    if (req.body.completed !== undefined) {
-        todo.completed = req.body.completed;
+    // Create new todo
+    const { title, userId } = req.body;
+    if (!title || !userId) {
+        return res.status(400).json({ error: 'Title and userId are required' });
     }
-
-    res.json(todo);
+    const todo = {
+        id: idCounter++,
+        title,
+        userId,
+        completed: false
+    };
+    todos.push(todo);
+    res.status(201).json(todo);
 });
 
-// DELETE: Remove a todo by id
-app.delete('/todos/:id', (req, res) => {
-    const index = todos.findIndex(t => t.id === parseInt(req.params.id));
-    if (index === -1) return res.status(404).send('Todo not found');
-
-    todos.splice(index, 1);
-    res.status(204).send(); // No content
+app.get('/users/:userId/todos', (req, res) => {
+    // Get todos for specific user
+    const userTodos = todos.filter(todo =>
+        todo.userId === parseInt(req.params.userId)
+    );
+    res.json(userTodos);
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// 4. Error handling for undefined routes
+app.use((req, res) => {
+    res.status(404).json({ error: 'Route not found' });
+});
+
+// Start server using PORT from .env or default to 3000
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
